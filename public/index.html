@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 🇮🇩 AI - Rekomendasi Makan </title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --container-bg: #ffffff;
+            --primary-orange: #ff4d00;
+            --secondary-red: #e63946;
+            --text-main: #2d3436;
+            --user-bubble: #ff4d00;
+            --ai-bubble: #f1f2f6;
+            --form-bg: #ffffff;
+            --input-bg: #f1f2f6;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-main: #f1faee;
+            --ai-bubble: #2d2d2d;
+            --form-bg: #252525;
+            --input-bg: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 80vh;
+            background: var(--container-bg);
+            display: flex;
+            flex-direction: column;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        #chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .user {
+            align-self: flex-end;
+            background-color: var(--user-bubble);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background-color: var(--ai-bubble);
+            color: var(--text-main);
+            border-bottom-left-radius: 2px;
+        }
+
+        /* Styling Markdown inside bot messages */
+        .bot h3 { margin: 5px 0; color: var(--primary-orange); font-size: 1.1rem; }
+        .bot ul { padding-left: 20px; margin: 5px 0; }
+        .bot hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 10px 0; }
+        .dark-mode .bot hr { border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        .bot a { 
+            display: inline-block;
+            margin-top: 5px;
+            padding: 5px 12px;
+            background-color: #4285F4;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .bot a:hover { background-color: #357abd; }
+
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            background: #aaa;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: jump 1.4s infinite ease-in-out;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes jump {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+
+        #chat-form {
+            display: flex;
+            padding: 15px;
+            background: var(--form-bg);
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            background: var(--input-bg);
+            border: none;
+            padding: 12px;
+            color: var(--text-main);
+            border-radius: 25px;
+            outline: none;
+        }
+
+        #theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+
+        #theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            background: var(--primary-orange);
+            border: none;
+            color: white;
+            padding: 0 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover { background: var(--secondary-red); }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <span>🇮🇩  Rekomendasi Makanan dengan AI Chatbot</span>
+            <button id="theme-toggle" title="Ganti Tema">🌙</button>
+        </header>
+        <div id="chat-box"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Mau makan apa hari ini?" autocomplete="off" />
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
